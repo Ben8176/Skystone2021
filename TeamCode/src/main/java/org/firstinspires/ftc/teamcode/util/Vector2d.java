@@ -5,6 +5,13 @@ public class Vector2d {
     private final double m_x;
     private final double m_y;
 
+    //Vector constants
+    final static Vector2d FORWARD = new Vector2d(0, 1),
+            BACKWARD = new Vector2d(0, -1),
+            LEFT = new Vector2d(-1, 0),
+            RIGHT = new Vector2d(1, 0),
+            ZERO = new Vector2d(0, 0);
+
     public Vector2d() {
         this(0,0);
     }
@@ -28,7 +35,7 @@ public class Vector2d {
         return new Vector2d(x,y);
     }
 
-    public Vector2d times(double scalar) {
+    public Vector2d scale(double scalar) {
         double x = m_x * scalar;
         double y = m_y * scalar;
         return new Vector2d(x,y);
@@ -38,6 +45,45 @@ public class Vector2d {
         double x = m_x - subtractor.getX();
         double y = m_y - subtractor.getY();
         return new Vector2d(x,y);
+    }
+
+    //flips the signs of both components
+    public Vector2d reflect () {
+        return new Vector2d(-m_x, -m_y);
+    }
+
+    //projection of current vector onto v
+    public Vector2d projection (Vector2d v) {
+        return v.scale(dot(v)/(Math.pow(v.magnitude(), 2))); // u dot v over mag(v)^2 times v
+    }
+
+    public Vector2d normalize(double target) {
+        if (magnitude() == 0) return ZERO; //avoid dividing by zero
+        return scale(target / magnitude());
+    }
+
+    //normalizes a group of vectors so that they maintain the same relative magnitudes and ...
+    // the vector of largest magnitude now has a magnitude equal to limit
+    public static Vector2d[] batchNormalize(double limit, Vector2d... vecs) {
+        double maxMag = 0;
+        for (Vector2d v : vecs) {
+            if (v.magnitude() > maxMag) {
+                maxMag = v.magnitude();
+            }
+        }
+        if (limit >= maxMag) {
+            return vecs;
+        }
+        Vector2d[] normed = new Vector2d[vecs.length];
+        for (int i = 0; i < vecs.length; i++) {
+            normed[i] = vecs[i].scale(limit / maxMag);
+        }
+        return normed;
+    }
+
+    //dot product
+    public double dot(Vector2d other) {
+        return getX() * other.getX() + getY() * other.getY();
     }
 
     public double getAngle() {

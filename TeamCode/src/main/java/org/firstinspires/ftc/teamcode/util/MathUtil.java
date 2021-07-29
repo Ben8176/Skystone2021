@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class MathUtil {
 
     private final double EPSILON = 1e-6;
@@ -7,6 +11,26 @@ public class MathUtil {
     //tunable curve steepness constant
     private final double kSigma = 1.05;
     public MathUtil() {
+    }
+
+    /*
+    Normalize an array of double inputs to a max of 1
+     */
+    public double[] normalize(double[] inputs) {
+        double[] outputs = new double[inputs.length];
+        double max = 0;
+        for (double d : inputs) {
+            if (Math.abs(d) > max) {
+                max = Math.abs(d);
+            }
+        }
+
+        for (int i = 0; i < inputs.length; i++) {
+            if (max != 0) {
+                outputs[i] = inputs[i] / max;
+            }
+        }
+        return outputs;
     }
 
     /*

@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.localization.ThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystem.LeftModule;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 import org.firstinspires.ftc.teamcode.util.Pose2d;
@@ -39,6 +40,8 @@ public class Robot {
     MathUtil myMath = new MathUtil();
     ElapsedTime robotTimer = new ElapsedTime();
     PIDController positionController = new PIDController();
+
+    public LeftModule lmodule;
 
     public boolean initComplete;
 
@@ -107,7 +110,7 @@ public class Robot {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         //reset encoders and set runmodes for other motors
-        List<ExpansionHubMotor> RWE_motors = Arrays.asList(flywheelA, flywheelB);
+        List<ExpansionHubMotor> RWE_motors = Arrays.asList(flywheelA);
         for (ExpansionHubMotor motor : RWE_motors) {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -122,6 +125,7 @@ public class Robot {
         //import the motors into the drivetrain subsystem
         drive = new Drivetrain
                 (telemetry, motor0, motor1, motor2, motor3, localizer);
+        lmodule = new LeftModule(motor0, motor1);
 
     }
 

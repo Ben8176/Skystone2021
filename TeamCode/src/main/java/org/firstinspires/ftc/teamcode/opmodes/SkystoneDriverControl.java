@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.Pose2d;
+import org.firstinspires.ftc.teamcode.util.Vector2d;
 
 @Config
 @TeleOp(name = "Driver Control")
@@ -49,6 +50,10 @@ public class SkystoneDriverControl extends LinearOpMode {
             //update robot pose and data from REV Hubs
             robot.update();
 
+            robot.lmodule.setMotorPowers(new Vector2d(1,0));
+            telemetry.addData("motor1: ", robot.lmodule.getMotor1power());
+            telemetry.addData("motor2: ", robot.lmodule.getMotor2power());
+            telemetry.update();
         }
     }
 }
