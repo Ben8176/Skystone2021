@@ -41,6 +41,12 @@ public class Vector2d {
         return new Vector2d(x,y);
     }
 
+    public Vector2d add(Vector2d addition) {
+        double x = m_x + addition.getX();
+        double y = m_y + addition.getY();
+        return new Vector2d(x,y);
+    }
+
     public Vector2d subtract(Vector2d subtractor) {
         double x = m_x - subtractor.getX();
         double y = m_y - subtractor.getY();

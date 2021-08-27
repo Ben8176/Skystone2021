@@ -50,9 +50,13 @@ public class SkystoneDriverControl extends LinearOpMode {
             //update robot pose and data from REV Hubs
             robot.update();
 
-            robot.lmodule.setMotorPowers(new Vector2d(1,0));
-            telemetry.addData("motor1: ", robot.lmodule.getMotor1power());
-            telemetry.addData("motor2: ", robot.lmodule.getMotor2power());
+//            robot.ndrive.driveDiffy(new Vector2d(0,1), 0);
+
+//            telemetry.addData("Target Vector X: ", robot.ndrive.rmod.getTargetVec().getX());
+//            telemetry.addData("Target Vector Y: ", robot.ndrive.rmod.getTargetVec().getY());
+//            telemetry.addData("Translation Comp: ", robot.ndrive.rmod.getPowerVec().getX());
+//            telemetry.addData("Rotation Comp: ", robot.ndrive.rmod.getPowerVec().getY());
+            telemetry.addData("Module Orientation: ", robot.ndrive.rmod.getModuleOrientation());
             telemetry.update();
         }
     }

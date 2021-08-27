@@ -10,9 +10,14 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.localization.ThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.subsystem.Drivetrain;
-import org.firstinspires.ftc.teamcode.subsystem.LeftModule;
+import org.firstinspires.ftc.teamcode.subsystem.DriveModule;
+import org.firstinspires.ftc.teamcode.subsystem.NewDrivetrain;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 import org.firstinspires.ftc.teamcode.util.Pose2d;
@@ -32,6 +37,7 @@ public class Robot {
     public static double positionKd = 0;
 
     public BNO055IMU imu;
+    Orientation angles;
     public ExpansionHubEx controlHub, exHub;
 
     public ExpansionHubMotor motor0, motor1, motor2, motor3;
@@ -41,12 +47,11 @@ public class Robot {
     ElapsedTime robotTimer = new ElapsedTime();
     PIDController positionController = new PIDController();
 
-    public LeftModule lmodule;
-
     public boolean initComplete;
 
     public ThreeWheelLocalizer localizer;
     public Drivetrain drive;
+    public NewDrivetrain ndrive;
 
     //bulk hub data
     RevBulkData controlData, exData;
@@ -125,8 +130,7 @@ public class Robot {
         //import the motors into the drivetrain subsystem
         drive = new Drivetrain
                 (telemetry, motor0, motor1, motor2, motor3, localizer);
-        lmodule = new LeftModule(motor0, motor1);
-
+        ndrive = new NewDrivetrain(motor0, motor1, motor2, motor3);
     }
 
     public void initAll() {
@@ -268,9 +272,8 @@ public class Robot {
         //update position
         updatePosition();
         //update the bulk data for the drivetrain encoders
-        drive.updateBulkData(controlData, exData);
-
-        drive.update();
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        ndrive.update(Math.toDegrees(getPosition().getTheta()), controlData, exData);
     }
 
     /*
@@ -292,10 +295,12 @@ public class Robot {
     /*
     Get the current pose of the robot from odometry localization
     EXTREMELY important! Don't mess with
+    IN RADIANS YOU MUST CONVERT TO DEGREES YOURSELF
      */
     public Pose2d getPosition() {
         return localizer.getGlobalPose();
     }
 
+    public double getIMUHeading() { return angles.firstAngle; }
 
 }
